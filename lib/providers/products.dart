@@ -47,11 +47,11 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  void addProduct(Product product) {
+  Future<void> addProduct(Product product) {
     var url = Uri.https(
         'shop-app-54400-default-rtdb.asia-southeast1.firebasedatabase.app',
         '/products.json');
-    http
+    return http
         .post(
       url,
       body: json.encode({
@@ -62,11 +62,14 @@ class Products with ChangeNotifier {
         'isFavorite': product.isFavorite
       }),
     )
-        .then((response) {
+        .catchError((err) {
+      print(err);
+      throw err;
+    }).then((response) {
       print(json.encode(response.body));
+      _items.add(product);
+      notifyListeners();
     });
-    _items.add(product);
-    notifyListeners();
   }
 
   void updateProduct(String id, Product newProduct) {
