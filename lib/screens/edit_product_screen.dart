@@ -41,7 +41,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
   @override
   void didChangeDependencies() {
     if (_isInit) {
-      final productId = ModalRoute.of(context)!.settings.arguments as String;
+      final productId = ModalRoute.of(context)!.settings.arguments;
       if (productId != null) {
         _editedProduct = Provider.of<Products>(context, listen: false)
             .findProductById(productId);
@@ -88,7 +88,8 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _form.currentState!.save();
-    if (_editedProduct.id != null) {
+    final productId = ModalRoute.of(context)!.settings.arguments;
+    if (_editedProduct.id == productId) {
       Provider.of<Products>(context, listen: false)
           .updateProduct(_editedProduct.id, _editedProduct);
     } else {
