@@ -64,7 +64,8 @@ class Products with ChangeNotifier {
             title: value['title'],
             description: value['description'],
             price: value['price'],
-            imageUrl: value['imageUrl']));
+            imageUrl: value['imageUrl'],
+            isFavorite: value['isFavorite']));
       });
       _items = loadProducts;
       notifyListeners();
