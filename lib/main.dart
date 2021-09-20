@@ -69,36 +69,44 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider.value(
-          value: Auth(),
-        ),
-        ChangeNotifierProvider.value(
-          value: Products(),
-        ),
-        ChangeNotifierProvider.value(
-          value: Cart(),
-        ),
-        ChangeNotifierProvider.value(
-          value: Orders(),
-        )
-      ],
-      child: MaterialApp(
-        title: 'My Shop',
-        theme: ThemeData(
-          primarySwatch: Colors.pink,
-          accentColor: Colors.deepOrange,
-          fontFamily: 'Lato',
-        ),
-        home: AuthScreen(),
-        routes: {
-          ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
-          CartScreen.routerName: (ctx) => CartScreen(),
-          OrdersScreen.routeName: (ctx) => OrdersScreen(),
-          UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
-          EditProductScreen.routeName: (ctx) => EditProductScreen()
-        },
-      ),
-    );
+        providers: [
+          ChangeNotifierProvider.value(
+            value: Auth(),
+          ),
+          // ChangeNotifierProxyProvider<Auth, Products>(
+          //   create: (_) => Products('', []),
+          //   update: (_, auth, previousProducts) => Products(
+          //     auth.token,
+          //     previousProducts == null ? [] : previousProducts.items,
+          //   ),
+          // ),
+          ChangeNotifierProvider.value(
+            value: Products(),
+          ),
+          ChangeNotifierProvider.value(
+            value: Cart(),
+          ),
+          ChangeNotifierProvider.value(
+            value: Orders(),
+          )
+        ],
+        child: Consumer<Auth>(
+          builder: (ctx, auth, _) => MaterialApp(
+            title: 'My Shop',
+            theme: ThemeData(
+              primarySwatch: Colors.pink,
+              accentColor: Colors.deepOrange,
+              fontFamily: 'Lato',
+            ),
+            home: (auth.isAuth) ? ProductsOverviewScreen() : AuthScreen(),
+            routes: {
+              ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+              CartScreen.routerName: (ctx) => CartScreen(),
+              OrdersScreen.routeName: (ctx) => OrdersScreen(),
+              UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
+              EditProductScreen.routeName: (ctx) => EditProductScreen()
+            },
+          ),
+        ));
   }
 }
