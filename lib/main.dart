@@ -73,15 +73,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ChangeNotifierProvider.value(
             value: Auth(),
           ),
-          // ChangeNotifierProxyProvider<Auth, Products>(
-          //   create: (_) => Products('', []),
-          //   update: (_, auth, previousProducts) => Products(
-          //     auth.token,
-          //     previousProducts == null ? [] : previousProducts.items,
-          //   ),
-          // ),
-          ChangeNotifierProvider.value(
-            value: Products(),
+          ChangeNotifierProxyProvider<Auth, Products>(
+            create: (_) => Products('', []),
+            update: (_, auth, previousProducts) => Products(
+              auth.token,
+              previousProducts == null ? [] : previousProducts.items,
+            ),
           ),
           ChangeNotifierProvider.value(
             value: Cart(),
