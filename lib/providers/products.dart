@@ -54,10 +54,12 @@ class Products with ChangeNotifier {
   }
 
   Future<void> featchAndSetProduct() async {
+    print(authToken);
     var url = Uri.parse(
         'https://shop-app-54400-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken');
     try {
       final response = await http.get(url);
+      print('========================');
       print(json.encode(response.body));
       final extractedData = jsonDecode(response.body) as Map<String, dynamic>;
       print(json.encode(extractedData));
@@ -67,7 +69,7 @@ class Products with ChangeNotifier {
             id: proId,
             title: value['title'],
             description: value['description'],
-            price: value['price'],
+            price: (value['price']) + .0,
             imageUrl: value['imageUrl'],
             isFavorite: value['isFavorite']));
       });
@@ -79,6 +81,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) {
+    print(authToken);
     var url = Uri.https(
         'shop-app-54400-default-rtdb.asia-southeast1.firebasedatabase.app',
         '/products.json?auth=$authToken');

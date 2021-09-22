@@ -9,7 +9,7 @@ class UserProductsScreen extends StatelessWidget {
   static const routeName = '/user-products';
 
   Future<void> _refreshProducts(BuildContext context) async {
-    await Provider.of<Products>(context).featchAndSetProduct();
+    await Provider.of<Products>(context, listen: false).featchAndSetProduct();
   }
 
   @override
