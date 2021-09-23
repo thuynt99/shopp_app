@@ -80,30 +80,24 @@ class Products with ChangeNotifier {
     }
   }
 
-  Future<void> addProduct(Product product) {
+  Future<void> addProduct(Product product) async {
     print(authToken);
-    var url = Uri.https(
-        'shop-app-54400-default-rtdb.asia-southeast1.firebasedatabase.app',
-        '/products.json?auth=$authToken');
-    return http
-        .post(
+    final url = Uri.parse(
+        'https://shop-app-54400-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken');
+    final response = await http.post(
       url,
       body: json.encode({
         'title': product.title,
         'description': product.description,
         'imageUrl': product.imageUrl,
         'price': product.price,
-        'isFavorite': product.isFavorite
+        'isFavorite': false,
       }),
-    )
-        .catchError((err) {
-      print(err);
-      throw err;
-    }).then((response) {
-      print(json.encode(response.body));
-      _items.add(product);
-      notifyListeners();
-    });
+    );
+    print('========================');
+    print(jsonDecode(response.body));
+    _items.add(product);
+    notifyListeners();
   }
 
   Future<void> updateProduct(String id, Product newProduct) async {
