@@ -54,16 +54,20 @@ class Products with ChangeNotifier {
     return _items.firstWhere((prod) => prod.id == id);
   }
 
-  Future<void> featchAndSetProduct() async {
-    print(authToken);
+  Future<void> featchAndSetProduct([bool filterByUser = false]) async {
+    final filterString =
+        filterByUser ? 'orderBy="creatorId"&equalTo="$userId"' : '';
     var url = Uri.parse(
-        'https://shop-app-54400-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken');
+        'https://shop-app-54400-default-rtdb.asia-southeast1.firebasedatabase.app/products.json?auth=$authToken&$filterString');
     try {
       final response = await http.get(url);
       print('========================');
       print(json.encode(response.body));
       final extractedData = jsonDecode(response.body) as Map<String, dynamic>;
       print(json.encode(extractedData));
+      if (extractedData == null) {
+        return;
+      }
 
       final urlFav = Uri.parse(
           'https://shop-app-54400-default-rtdb.asia-southeast1.firebasedatabase.app/userFavorites/$userId.json?auth=$authToken');
@@ -100,6 +104,7 @@ class Products with ChangeNotifier {
         'imageUrl': product.imageUrl,
         'price': product.price,
         'isFavorite': false,
+        'creatorId': userId,
       }),
     );
     print('========================');
