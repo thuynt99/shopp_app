@@ -20,26 +20,27 @@ class Product with ChangeNotifier {
   });
   void setFavValue(newVal) {
     isFavorite = newVal;
+    print(isFavorite);
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus(String authToken) async {
+  Future<void> toggleFavoriteStatus(String authToken, String userId) async {
     var oldValue = isFavorite;
     setFavValue(!isFavorite);
     try {
       final url = Uri.parse(
-          'https://shop-app-54400-default-rtdb.asia-southeast1.firebasedatabase.app/products/$id.json?auth=$authToken');
-      final response = await http.patch(url,
-          body: json.encode({
-            'isFavorite': !oldValue,
-          }));
+          'https://shop-app-54400-default-rtdb.asia-southeast1.firebasedatabase.app/userFavorites/$userId/$id.json?auth=$authToken');
+      final response = await http.put(url,
+          body: json.encode(
+            isFavorite,
+          ));
       if (response.statusCode >= 400) {
+        print(json.encode(response.body));
         setFavValue(oldValue);
       }
     } catch (e) {
+      print(e);
       setFavValue(oldValue);
     }
   }
-
-  notifyListeners();
 }
