@@ -74,9 +74,10 @@ class _MyHomePageState extends State<MyHomePage> {
             value: Auth(),
           ),
           ChangeNotifierProxyProvider<Auth, Products>(
-            create: (_) => Products('', []),
+            create: (_) => Products('', '', []),
             update: (_, auth, previousProducts) => Products(
               auth.token,
+              auth.userId,
               previousProducts == null ? [] : previousProducts.items,
             ),
           ),
