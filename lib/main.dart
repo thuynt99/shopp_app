@@ -11,6 +11,7 @@ import 'package:shop_app/screens/orders_screen.dart';
 import 'package:shop_app/screens/product_detail_screen.dart';
 import 'package:shop_app/screens/products_overview_screen.dart';
 import 'package:shop_app/screens/user_products_screen.dart';
+import 'package:shop_app/widgets/splash_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -101,7 +102,16 @@ class _MyHomePageState extends State<MyHomePage> {
               accentColor: Colors.deepOrange,
               fontFamily: 'Lato',
             ),
-            home: (auth.isAuth) ? ProductsOverviewScreen() : AuthScreen(),
+            home: auth.isAuth
+                ? ProductsOverviewScreen()
+                : FutureBuilder(
+                    future: auth.tryAutoLogin(),
+                    builder: (ctx, authResultSnapshot) =>
+                        authResultSnapshot.connectionState ==
+                                ConnectionState.waiting
+                            ? SplashScreen()
+                            : AuthScreen(),
+                  ),
             routes: {
               ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
               CartScreen.routerName: (ctx) => CartScreen(),
